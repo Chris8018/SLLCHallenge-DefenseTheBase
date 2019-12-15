@@ -256,20 +256,251 @@ public class Board {
             for (int j = 0; j < this.size; j++)
                 this.board[i][j] = 1;
 
+        // Enemy
         for (Enemy enemy : this.enemies) {
             if (!enemy.isActive())
                 continue;
 
             int[][] coords = enemy.getCoords();
-            //
+
+            int x = enemy.getxCoord();
+            int y = enemy.getyCoord();
+            int width = enemy.getWidth();
+            int length = enemy.getLength();
+
+            for (int i = y; i < y + length; i++) {
+                if (i < 0 || i >= this.size)
+                    continue;
+
+                for (int j = x; j < x + width; j++) {
+                    if (j < 0 || j >= this.size)
+                        continue;
+
+                    this.board[i][j] = coords[i - y][j - x];
+                }
+            }
         }
+
+        // Ally
+        for (Ally ally : this.allies) {
+            if (!ally.isActive())
+                continue;
+
+            int[][] coords = ally.getCoords();
+
+            int x = ally.getxCoord();
+            int y = ally.getyCoord();
+            int width = ally.getWidth();
+            int length = ally.getLength();
+
+            for (int i = y; i < y + length; i++) {
+                if (i < 0 || i >= this.size)
+                    continue;
+
+                for (int j = x; j < x + width; j++) {
+                    if (j < 0 || j >= this.size)
+                        continue;
+
+                    this.board[i][j] = coords[i - y][j - x];
+                }
+            }
+        }
+
+        // Missile
+        for (Missile missile : this.missiles) {
+            if (!missile.isActive())
+                continue;
+
+            int[][] coords = missile.getCoords();
+
+            int x = missile.getxCoord();
+            int y = missile.getyCoord();
+            int width = missile.getWidth();
+            int length = missile.getLength();
+
+            for (int i = y; i < y + length; i++) {
+                if (i < 0 || i >= this.size)
+                    continue;
+
+                for (int j = x; j < x + width; j++) {
+                    if (j < 0 || j >= this.size)
+                        continue;
+
+                    this.board[i][j] = coords[i - y][j - x];
+                }
+            }
+        }
+
     }
 
     private int checkCollision() {
-        return 0;
+        int collisionCount = 0;
+
+        // Enemy | Ally
+        for (Enemy enemy : this.enemies) {
+            if (!enemy.isActive())
+                continue;
+
+            int eX = enemy.getxCoord();
+            int eY = enemy.getyCoord();
+            int eWidth = enemy.getWidth();
+            int eLength = enemy.getLength();
+
+            for (Ally ally : this.allies) {
+                if (!ally.isActive())
+                    continue;
+
+                int aX = ally.getxCoord();
+                int aY = ally.getyCoord();
+                int aWidth = ally.getWidth();
+                int aLength = ally.getLength();
+
+                for (int i = aY; i < aY + aLength; i++) {
+                    if (i < 0 || i >= this.size)
+                        continue;
+
+                    for (int j = aX; j < aX + aWidth; j++) {
+                        if (j < 0 || j >= this.size)
+                            continue;
+
+                        if ((i >= eY && i < eY + eLength) && (j >= eX && j < eX + eWidth)) {
+                            if (!enemy.isAHole(i - eY, j - eX) && !ally.isAHole(i - aY, j - aX)) {
+                                System.out.println("Collision at:" + j + "," + i + " between an enemy and an ally");
+                                ally.breakSprite(i - aY, j - aX);
+                                enemy.breakSprite(i - eY, j - eX);
+
+                                collisionCount++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // Enemy | Missile
+        for (Enemy enemy : this.enemies) {
+            if (!enemy.isActive())
+                continue;
+
+            int eX = enemy.getxCoord();
+            int eY = enemy.getyCoord();
+            int eWidth = enemy.getWidth();
+            int eLength = enemy.getLength();
+
+            for (Missile missile : this.missiles) {
+                if (!missile.isActive())
+                    continue;
+
+                int mX = missile.getxCoord();
+                int mY = missile.getyCoord();
+                int mWidth = missile.getWidth();
+                int mLength = missile.getLength();
+
+                for (int i = mY; i < mY + mLength; i++) {
+                    if (i < 0 || i >= this.size)
+                        continue;
+
+                    for (int j = mX; j < mX + mWidth; j++) {
+                        if (j < 0 || j >= this.size)
+                            continue;
+
+                        if ((i >= eY && i < eY + eLength) && (j >= eX && j < eX + eWidth)) {
+                            if (!enemy.isAHole(i - eY, j - eX) && !missile.isAHole(i - mY, j - mX)) {
+                                System.out.println("Collision at:" + j + "," + i + " between an enemy and a missile");
+                                missile.breakSprite(i - mY, j - mX);
+                                enemy.breakSprite(i - eY, j - eX);
+
+                                collisionCount++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        for (Missile missile : this.missiles) {
+            if (!missile.isActive())
+                continue;
+
+            int mX = missile.getxCoord();
+            int mY = missile.getyCoord();
+            int mWidth = missile.getWidth();
+            int mLength = missile.getLength();
+
+            for (Ally ally : this.allies) {
+                if (!ally.isActive())
+                    continue;
+
+                int aX = ally.getxCoord();
+                int aY = ally.getyCoord();
+                int aWidth = ally.getWidth();
+                int aLength = ally.getLength();
+
+                for (int i = aY; i < aY + aLength; i++) {
+                    if (i < 0 || i >= this.size)
+                        continue;
+
+                    for (int j = aX; j < aX + aWidth; j++) {
+                        if (j < 0 || j >= this.size)
+                            continue;
+
+                        if ((i >= mY && i < mY + mLength) && (j >= mX && j < mX + mWidth)) {
+                            if (!missile.isAHole(i - mY, j - mX) && !ally.isAHole(i - aY, j - aX)) {
+                                System.out.println("Collision at:" + j + "," + i + " between a missile and an ally");
+                                ally.breakSprite(i - aY, j - aX);
+                                missile.breakSprite(i - mY, j - mX);
+
+                                collisionCount++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        return collisionCount;
     }
 
     public void begin () {
-        //
+        int enemiesActive = 0;
+        for (Enemy enemy : enemies)
+            if (enemy.isActive())
+                enemiesActive++;
+
+        int collisionCount = 1; // Set to 1 so initial state is drawn ???
+
+        while (enemiesActive > 0) {
+            placeSprites();
+
+            if (collisionCount > 0)
+                draw();
+
+            for (int i = maxPossibleSpeed; i >= 1; i--) {
+                final int i_const = i;
+                this.enemies.forEach(enemy -> {
+                    if (i_const - enemy.getSpeed() <= 0)
+                        enemy.move();
+                });
+                this.allies.forEach(ally -> {
+                    if (i_const - ally.getSpeed() <= 0)
+                        ally.move();
+                });
+                this.missiles.forEach(missile -> {
+                    if (i_const - missile.getSpeed() <= 0)
+                        missile.move();
+                });
+                checkCollision();
+            }
+
+            enemiesActive = 0;
+            for (Enemy enemy : enemies)
+                if(enemy.isActive())
+                    enemiesActive++;
+
+            collisionCount = checkCollision();
+        }
+
+        placeSprites();
+        draw();
     }
 }

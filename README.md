@@ -31,3 +31,5 @@ MISSILE (Speed, Power)
 *Missile can be launched form ANY CELL of the LAST ROW of the board. Each missile can have a movement pattern associated with it. Your defense system has to calculate the most effective paths for the missiles to destroy the largest number of enemy objects. You might need to hit an object multiple times in order to destroy it completely.
 
 The program should take the size of the board and number of missiles as input, generate the objects and their  properties randomly (Speed, Color, Movement pattern, Coordinates on the board) and output the launch position of the missiles along with their movement patterns
+
+==> This approach feels somewhat wrong. Also, I have created bug during re-implement

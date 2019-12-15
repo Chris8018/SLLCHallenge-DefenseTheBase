@@ -141,6 +141,12 @@ class Sprite {
     }
 
     private void init(int id) {
+        this.speed = (int) (Math.random() * 3) + 1;
+        this.stepCount = this.speed;
+        this.nextStepIndex = 0;
+        this.nextStep = movePattern[nextStepIndex];
+        this.coords = new int[length][width];
+
         int type;
 
         switch (color) {

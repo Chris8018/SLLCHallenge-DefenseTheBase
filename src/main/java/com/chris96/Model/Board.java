@@ -264,4 +264,12 @@ public class Board {
             //
         }
     }
+
+    private int checkCollision() {
+        return 0;
+    }
+
+    public void begin () {
+        //
+    }
 }

@@ -1,4 +1,6 @@
 # Defense the Base
+**Implementation By David Akhihiero in SoloLearn Community**
+
 The objective of this project is to build a defense system, which will hit and destroy enemy objects the radar tracks flying objects and displays the data on a given NxN board
 Each detected object is represented as a rectangle on the board, taking one or more cells.
 

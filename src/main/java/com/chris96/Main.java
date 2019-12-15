@@ -1,36 +1,41 @@
 package com.chris96;
 
-import java.util.Arrays;
+import com.chris96.Model.*;
+
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 public class Main {
+    // Answer from User David Akhihiero
 
     public static void main(String[] args) {
-        int width, height, missileAmount;
+        int size, numOfMissiles;
+
+        Scanner sc = new Scanner(System.in);
+        System.out.println("Key\nB = Enemy\nG = Ally\n" + (char)254 + " = Missile\nA, B, C... are used to represent 10, 11, 12...\nOnly Time frames involving collision(s), are displayed in an attempt to reduce code runtime");
 
         try {
-            if (args.length > 0 && args.length <= 3)
+            System.out.print("Grid size: ");
+            size = sc.nextInt();
+            if (size < 6 || size > 19)
             {
-                width = Integer.parseInt(args[0]);
-                height = Integer.parseInt(args[1]);
-                missileAmount = Integer.parseInt(args[2]);
-            } else {
-                Scanner reader = new Scanner(System.in);
-
-                width = getInput(reader, "base's Width");
-                height = getInput(reader, "base's Height");
-                missileAmount = getInput(reader, "missile amount");
+                System.out.print(size + " is too " + (size < 6 ? "small" : "large") + ", default value is being used. Grid size is: ");
+                throw new NoSuchElementException();
             }
-        } catch (Exception e) {
-            System.out.println("Invalid input");
-            e.printStackTrace();
-            System.exit(1);
+        } catch (NoSuchElementException e) {
+            size = 16;
+        }
+        System.out.println(size);
+        System.out.print("Number of missiles: ");
+
+        try {
+            numOfMissiles = sc.nextInt();
+        } catch (NoSuchElementException e) {
+            numOfMissiles = 5;
         }
 
-    }
-
-    private static int getInput(Scanner reader, String mess) {
-        System.out.println("Enter " + mess + " : ");
-        return reader.nextInt();
+        System.out.println(numOfMissiles);
+        Board board = new Board(size, numOfMissiles);
+        board.begin();
     }
 }

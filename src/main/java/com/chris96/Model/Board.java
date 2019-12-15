@@ -227,7 +227,7 @@ public class Board {
 
         int i = 0;
         for (int[] row : board) {
-            System.out.println(getLetterNum(i++) + " ");
+            System.out.print(getLetterNum(i++) + " ");
             for (int element : row)
                 System.out.print(getElement(element) + " ");
             System.out.println();
